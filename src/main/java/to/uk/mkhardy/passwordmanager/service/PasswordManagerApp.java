@@ -30,6 +30,7 @@ import to.uk.mkhardy.passwordmanager.core.beans.impl.Question;
 import to.uk.mkhardy.passwordmanager.core.impl.PasswordRuleException;
 import to.uk.mkhardy.passwordmanager.service.beans.GetAnswer;
 import to.uk.mkhardy.passwordmanager.service.beans.GetPassword;
+import to.uk.mkhardy.passwordmanager.service.beans.IsValidAnswer;
 
 @Configuration
 @ComponentScan
@@ -104,6 +105,22 @@ public class PasswordManagerApp {
 			return response;
 		}
 		
+		@GetMapping(path="/isValidAnswer",produces = MediaType.APPLICATION_JSON_VALUE)
+		public Map<String,String> isValidAnswer(@RequestBody IsValidAnswer isValidAnswer) {
+			
+			boolean isValid = passwordManager.isValidAnswer(isValidAnswer.getpText(), isValidAnswer.getAnswer());
+			
+			Map<String, String> response = new HashMap<String, String>();
+			if(isValid) {
+				response.put("isValid","true");
+			}
+			else {
+				response.put("isValid","false");
+			}
+			
+			return response;
+		}
+		
 		@PostMapping(path="/getPassword",produces = MediaType.APPLICATION_JSON_VALUE)
 		public Password getPassword(@RequestBody GetPassword getPassword) {
 			Password pass = passwordManager.getPassword(getPassword.getPassword(), getPassword.getUser());
@@ -119,6 +136,8 @@ public class PasswordManagerApp {
 		public Answer getAnswer(@RequestBody GetAnswer getAnswer) {
 			return passwordManager.getAnswer(getAnswer.getAnswer(), getAnswer.getUser(), getAnswer.getQuestion());
 		}
+		
+		
 	}
 	
 	
