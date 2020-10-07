@@ -28,6 +28,8 @@ import to.uk.mkhardy.passwordmanager.core.beans.impl.PasswordLowercaseCharRule;
 import to.uk.mkhardy.passwordmanager.core.beans.impl.PasswordUppercaseCharRule;
 import to.uk.mkhardy.passwordmanager.core.beans.impl.Question;
 import to.uk.mkhardy.passwordmanager.core.impl.PasswordRuleException;
+import to.uk.mkhardy.passwordmanager.service.beans.DecryptWithAnswers;
+import to.uk.mkhardy.passwordmanager.service.beans.EncryptWithAnswers;
 import to.uk.mkhardy.passwordmanager.service.beans.ExtractDataKey;
 import to.uk.mkhardy.passwordmanager.service.beans.GenerateDataKey;
 import to.uk.mkhardy.passwordmanager.service.beans.GetAnswer;
@@ -106,35 +108,36 @@ public class PasswordManagerApp {
 		}
 
 		@PostMapping(path = "/isCorrectAnswer", produces = MediaType.APPLICATION_JSON_VALUE)
-		public Map<String, String> isCorrectAnswer(@RequestBody IsCorrectAnswer isCorrectAnswer) {
+		public Map<String, Object> isCorrectAnswer(@RequestBody IsCorrectAnswer isCorrectAnswer) {
 
 			boolean isValid = passwordManager.isCorrectAnswer(isCorrectAnswer.getpText(), isCorrectAnswer.getAnswer());
 
-			Map<String, String> response = new HashMap<String, String>();
+			Map<String, Object> response = new HashMap<String, Object>();
 			if (isValid) {
-				response.put("isValid", "true");
+				response.put("isValid", Boolean.TRUE);
 			} else {
-				response.put("isValid", "false");
+				response.put("isValid", Boolean.FALSE);
 			}
 
 			return response;
 		}
 
 		@PostMapping(path = "/isCorrectPassword", produces = MediaType.APPLICATION_JSON_VALUE)
-		public Map<String, String> isCorrectPassword(@RequestBody IsCorrectPassword isCorrectPassword) {
+		public Map<String, Object> isCorrectPassword(@RequestBody IsCorrectPassword isCorrectPassword) {
 
-			boolean isValid = passwordManager.isCorrectPassword(isCorrectPassword.getpTextPassword(),isCorrectPassword.getPassword());
+			boolean isValid = passwordManager.isCorrectPassword(isCorrectPassword.getpTextPassword(),
+					isCorrectPassword.getPassword());
 
-			Map<String, String> response = new HashMap<String, String>();
+			Map<String, Object> response = new HashMap<String, Object>();
 			if (isValid) {
-				response.put("isValid", "true");
+				response.put("isValid", Boolean.TRUE);
 			} else {
-				response.put("isValid", "false");
+				response.put("isValid", Boolean.FALSE);
 			}
 
 			return response;
 		}
-		
+
 		@PostMapping(path = "/getPassword", produces = MediaType.APPLICATION_JSON_VALUE)
 		public Password getPassword(@RequestBody GetPassword getPassword) {
 			Password pass = passwordManager.getPassword(getPassword.getPassword(), getPassword.getUser());
@@ -160,6 +163,18 @@ public class PasswordManagerApp {
 		public String extractDataKey(@RequestBody ExtractDataKey extractDataKey) throws Exception {
 			return passwordManager.extractDataKey(extractDataKey.getEncryptedDataKey(), extractDataKey.getPassword(),
 					extractDataKey.getUser());
+		}
+
+		@PostMapping(path = "/encryptWithAnswers", produces = MediaType.APPLICATION_JSON_VALUE)
+		public String encryptWithAnswers(@RequestBody EncryptWithAnswers encryptWithAnswers) throws Exception {
+			return passwordManager.encrypt(encryptWithAnswers.getpText().getBytes(), encryptWithAnswers.getAnswers(),
+					encryptWithAnswers.getUser());
+		}
+		
+		@PostMapping(path = "/decryptWithAnswers", produces = MediaType.APPLICATION_JSON_VALUE)
+		public String decryptWithAnswers(@RequestBody DecryptWithAnswers decryptWithAnswers) throws Exception {
+			return passwordManager.decrypt(decryptWithAnswers.getcText(), decryptWithAnswers.getAnswers(),
+					decryptWithAnswers.getUser());
 		}
 	}
 
