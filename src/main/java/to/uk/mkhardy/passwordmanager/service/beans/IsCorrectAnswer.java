@@ -2,11 +2,11 @@ package to.uk.mkhardy.passwordmanager.service.beans;
 
 import to.uk.mkhardy.passwordmanager.core.beans.impl.Answer;
 
-public final class IsValidAnswer {
+public final class IsCorrectAnswer {
 	private final String pText;
 	private final Answer answer;
 	
-	public IsValidAnswer(String pText, Answer answer) {
+	public IsCorrectAnswer(String pText, Answer answer) {
 		this.pText = pText;
 		this.answer = answer;
 	}
