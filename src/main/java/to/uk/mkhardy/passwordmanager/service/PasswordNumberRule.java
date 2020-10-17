@@ -1,7 +1,6 @@
 package to.uk.mkhardy.passwordmanager.service;
 
 import to.uk.mkhardy.passwordmanager.core.beans.PasswordRule;
-import to.uk.mkhardy.passwordmanager.core.impl.PasswordRuleException;
 
 public final class PasswordNumberRule extends PasswordRule {
 	
@@ -9,7 +8,7 @@ public final class PasswordNumberRule extends PasswordRule {
 		super(descriptionKey, errorMessageKey);
 	}
 
-	public boolean isValidPassword(String password) throws PasswordRuleException {
+	public boolean isValidPassword(String password) {
 		
 		boolean containsNumber = false;
 		
@@ -20,11 +19,7 @@ public final class PasswordNumberRule extends PasswordRule {
 			}
 		}
 		
-		if(!containsNumber) {
-			throw new PasswordRuleException(this);
-		}
-		
-		return true;
+		return containsNumber;
 	}
 
 }
