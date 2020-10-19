@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -58,7 +59,6 @@ public class PasswordManagerApp {
 	}
 
 	private Logger logger = LoggerFactory.getLogger(PasswordManagerApp.class);
-	private PasswordManager passwordManager;
 	
 	@Bean
 	public Docket api() {
@@ -66,8 +66,8 @@ public class PasswordManagerApp {
 				.paths(PathSelectors.regex("/password-manager/.*")).build();
 	}
 	
-	public PasswordManagerApp() {
-
+	@Bean
+	public PasswordManager passwordManager() {
 		PasswordRule lengthRule = new PasswordLengthRule(8, "passwordLengthRule.description",
 				"passwordLengthRule.errorMessage");
 		PasswordRule uppercaseCharRule = new PasswordUppercaseCharRule("passwordUppercaseCharRule.description",
@@ -90,16 +90,21 @@ public class PasswordManagerApp {
 		Question question9 = new Question("question9");
 		Question question10 = new Question("question10");
 
-		passwordManager = new PasswordManagerBuilder().addPasswordRule(uppercaseCharRule)
+		PasswordManager passwordManager = new PasswordManagerBuilder().addPasswordRule(uppercaseCharRule)
 				.addPasswordRule(lowercaseCharRule).addPasswordRule(lengthRule).addPasswordRule(numberRule)
 				.addPasswordRule(spCharRule).addQuestion(question1).addQuestion(question2).addQuestion(question3)
 				.addQuestion(question4).addQuestion(question5).addQuestion(question6).addQuestion(question7)
 				.addQuestion(question8).addQuestion(question9).addQuestion(question10).build();
+		
+		return passwordManager;
 	}
 
 	@RestController
 	@RequestMapping("password-manager")
 	public class PasswordManagerController {
+		
+		@Autowired
+		PasswordManager passwordManager;
 		
 		@CrossOrigin
 		@ApiOperation(value = "Check password against password rules")
