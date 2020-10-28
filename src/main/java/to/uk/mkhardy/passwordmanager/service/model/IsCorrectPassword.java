@@ -1,4 +1,4 @@
-package to.uk.mkhardy.passwordmanager.service.beans;
+package to.uk.mkhardy.passwordmanager.service.model;
 
 import to.uk.mkhardy.passwordmanager.core.beans.impl.Password;
 

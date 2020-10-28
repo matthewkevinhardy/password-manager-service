@@ -1,4 +1,4 @@
-package to.uk.mkhardy.passwordmanager.service;
+package to.uk.mkhardy.passwordmanager.service.utils;
 
 import to.uk.mkhardy.passwordmanager.core.beans.PasswordRule;
 

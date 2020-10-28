@@ -1,4 +1,4 @@
-package to.uk.mkhardy.passwordmanager.service.beans;
+package to.uk.mkhardy.passwordmanager.service.model;
 
 import java.util.List;
 
