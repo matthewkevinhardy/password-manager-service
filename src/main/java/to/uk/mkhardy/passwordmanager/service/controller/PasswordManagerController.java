@@ -130,28 +130,43 @@ public class PasswordManagerController {
 	@CrossOrigin
 	@ApiOperation(value = "Generate a data key")
 	@PostMapping(path = "/generateDataKey", produces = MediaType.APPLICATION_JSON_VALUE)
-	public String generateDataKey(@RequestBody GenerateDataKey generateDataKey)  {
-		return passwordManagerComponent.generateDataKey(generateDataKey);
+	public Map<String,Object> generateDataKey(@RequestBody GenerateDataKey generateDataKey)  {
+		String cKey = passwordManagerComponent.generateDataKey(generateDataKey);
+		Map<String,Object> response = new HashMap<String, Object>();
+		response.put("cKey",cKey);
+		response.put("user",generateDataKey.getUser());
+		return response;
 	}
 
 	@CrossOrigin
 	@ApiOperation(value = "Extract a data key")
 	@PostMapping(path = "/extractDataKey", produces = MediaType.APPLICATION_JSON_VALUE)
-	public String extractDataKey(@RequestBody ExtractDataKey extractDataKey)  {
-		return passwordManagerComponent.extractDataKey(extractDataKey);
+	public Map<String,Object> extractDataKey(@RequestBody ExtractDataKey extractDataKey)  {
+		String pKey = passwordManagerComponent.extractDataKey(extractDataKey);
+		Map<String,Object> response = new HashMap<String, Object>();
+		response.put("pKey",pKey);
+		response.put("user",extractDataKey.getUser());
+		return response;
 	}
 
 	@CrossOrigin
 	@ApiOperation(value = "Encrypt some plaintext with a list of answers")
 	@PostMapping(path = "/encryptWithAnswers", produces = MediaType.APPLICATION_JSON_VALUE)
-	public String encryptWithAnswers(@RequestBody EncryptWithAnswers encryptWithAnswers)  {
-		return passwordManagerComponent.encryptWithAnswers(encryptWithAnswers);
+	public Map<String,Object> encryptWithAnswers(@RequestBody EncryptWithAnswers encryptWithAnswers)  {
+		
+		String cText = passwordManagerComponent.encryptWithAnswers(encryptWithAnswers);
+		Map<String,Object> response = new HashMap<String, Object>();
+		response.put("cText",cText);
+		return response;
 	}
 	
 	@CrossOrigin
 	@ApiOperation(value = "Decrypt some cypher text with a list of answers")
 	@PostMapping(path = "/decryptWithAnswers", produces = MediaType.APPLICATION_JSON_VALUE)
-	public String decryptWithAnswers(@RequestBody DecryptWithAnswers decryptWithAnswers)  {
-		return passwordManagerComponent.decryptWithAnswers(decryptWithAnswers);
+	public Map<String,Object> decryptWithAnswers(@RequestBody DecryptWithAnswers decryptWithAnswers)  {
+		String pText = passwordManagerComponent.decryptWithAnswers(decryptWithAnswers);
+		Map<String,Object> response = new HashMap<String, Object>();
+		response.put("pText",pText);
+		return response;
 	}
 }
