@@ -16,6 +16,8 @@ import to.uk.mkhardy.passwordmanager.core.beans.impl.PasswordLengthRule;
 import to.uk.mkhardy.passwordmanager.core.beans.impl.PasswordLowercaseCharRule;
 import to.uk.mkhardy.passwordmanager.core.beans.impl.PasswordUppercaseCharRule;
 import to.uk.mkhardy.passwordmanager.core.beans.impl.Question;
+import to.uk.mkhardy.passwordmanager.service.component.PasswordManagerComponent;
+import to.uk.mkhardy.passwordmanager.service.component.PasswordManagerComponentImpl;
 import to.uk.mkhardy.passwordmanager.service.utils.PasswordNumberRule;
 import to.uk.mkhardy.passwordmanager.service.utils.PasswordSpecialCharRule;
 
@@ -30,8 +32,13 @@ public class Config {
 	}
 	
 	@Bean
+	public PasswordManagerComponent getPasswordManagerComponent() {
+		return new PasswordManagerComponentImpl(getPasswordManager());
+	}
+	
+	@Bean
 	@Scope("singleton")
-	public PasswordManager passwordManager() {
+	public PasswordManager getPasswordManager() {
 		PasswordRule lengthRule = new PasswordLengthRule(8, "passwordLengthRule.description",
 				"passwordLengthRule.errorMessage");
 		PasswordRule uppercaseCharRule = new PasswordUppercaseCharRule("passwordUppercaseCharRule.description",

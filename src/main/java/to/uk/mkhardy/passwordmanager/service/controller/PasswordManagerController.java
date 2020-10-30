@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import io.swagger.annotations.ApiOperation;
-import to.uk.mkhardy.passwordmanager.core.PasswordManager;
 import to.uk.mkhardy.passwordmanager.core.beans.impl.Answer;
 import to.uk.mkhardy.passwordmanager.core.beans.impl.Password;
 import to.uk.mkhardy.passwordmanager.core.beans.impl.Question;
-import to.uk.mkhardy.passwordmanager.core.impl.PasswordRuleException;
+import to.uk.mkhardy.passwordmanager.service.component.PasswordManagerComponent;
+import to.uk.mkhardy.passwordmanager.service.exception.PassRuleException;
 import to.uk.mkhardy.passwordmanager.service.model.DecryptWithAnswers;
 import to.uk.mkhardy.passwordmanager.service.model.EncryptWithAnswers;
 import to.uk.mkhardy.passwordmanager.service.model.ExtractDataKey;
@@ -37,7 +37,7 @@ import to.uk.mkhardy.passwordmanager.service.model.IsCorrectPassword;
 public class PasswordManagerController {
 	
 	@Autowired
-	private PasswordManager passwordManager;
+	private PasswordManagerComponent passwordManagerComponent;
 	
 	@CrossOrigin
 	@ApiOperation(value = "Check password against password rules")
@@ -51,13 +51,11 @@ public class PasswordManagerController {
 		response.put("errors",errors);
 		
 		try {
-			isValid = passwordManager.isValidPassword(password);
-		} catch (PasswordRuleException e) {
+			isValid = passwordManagerComponent.isValidPassword(password);
+		} catch (PassRuleException e) {
 			isValid = false;
-			e.getPasswordRules().stream().forEach((r)->errors.add(r.getErrorMessageKey()));
+			e.getPasswordRuleException().getPasswordRules().stream().forEach((r)->errors.add(r.getErrorMessageKey()));
 		}
-
-		
 		
 		if (isValid) {
 			response.put("isValid", Boolean.TRUE);
@@ -72,7 +70,7 @@ public class PasswordManagerController {
 	@PostMapping(path = "/isCorrectAnswer", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> isCorrectAnswer(@RequestBody IsCorrectAnswer isCorrectAnswer) {
 
-		boolean isValid = passwordManager.isCorrectAnswer(isCorrectAnswer.getpText(), isCorrectAnswer.getAnswer());
+		boolean isValid = passwordManagerComponent.isCorrectAnswer(isCorrectAnswer);
 
 		Map<String, Object> response = new HashMap<String, Object>();
 		if (isValid) {
@@ -89,8 +87,7 @@ public class PasswordManagerController {
 	@PostMapping(path = "/isCorrectPassword", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> isCorrectPassword(@RequestBody IsCorrectPassword isCorrectPassword) {
 
-		boolean isValid = passwordManager.isCorrectPassword(isCorrectPassword.getpTextPassword(),
-				isCorrectPassword.getPassword());
+		boolean isValid = passwordManagerComponent.isCorrectPassword(isCorrectPassword);
 
 		Map<String, Object> response = new HashMap<String, Object>();
 		if (isValid) {
@@ -112,7 +109,7 @@ public class PasswordManagerController {
 		if(getPassword.getUser().getUserName().trim().length()==0) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "empty username");
 		}
-		Password pass = passwordManager.getPassword(getPassword.getPassword(), getPassword.getUser());
+		Password pass = passwordManagerComponent.getPassword(getPassword);
 		return pass;
 	}
 
@@ -120,64 +117,41 @@ public class PasswordManagerController {
 	@ApiOperation(value = "Gets the list of security questions")
 	@GetMapping(path = "/getQuestions", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Question> getQuestions() {
-		return passwordManager.getQuestions();
+		return passwordManagerComponent.getQuestions();
 	}
 
 	@CrossOrigin
 	@ApiOperation(value = "Hashes an answer")
 	@PostMapping(path = "/getAnswer", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Answer getAnswer(@RequestBody GetAnswer getAnswer) {
-		return passwordManager.getAnswer(getAnswer.getAnswer(), getAnswer.getUser(), getAnswer.getQuestion());
+		return passwordManagerComponent.getAnswer(getAnswer);
 	}
 
 	@CrossOrigin
 	@ApiOperation(value = "Generate a data key")
 	@PostMapping(path = "/generateDataKey", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String generateDataKey(@RequestBody GenerateDataKey generateDataKey)  {
-		try {
-			return passwordManager.generateDataKey(generateDataKey.getPassword(), generateDataKey.getUser());
-		} catch (Exception e) {
-			throw new ResponseStatusException(
-			           HttpStatus.INTERNAL_SERVER_ERROR, "Error", e);
-		}
+		return passwordManagerComponent.generateDataKey(generateDataKey);
 	}
 
 	@CrossOrigin
 	@ApiOperation(value = "Extract a data key")
 	@PostMapping(path = "/extractDataKey", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String extractDataKey(@RequestBody ExtractDataKey extractDataKey)  {
-		try {
-			return passwordManager.extractDataKey(extractDataKey.getEncryptedDataKey(), extractDataKey.getPassword(),
-					extractDataKey.getUser());
-		} catch (Exception e) {
-			throw new ResponseStatusException(
-			           HttpStatus.INTERNAL_SERVER_ERROR, "Error", e);
-		}
+		return passwordManagerComponent.extractDataKey(extractDataKey);
 	}
 
 	@CrossOrigin
 	@ApiOperation(value = "Encrypt some plaintext with a list of answers")
 	@PostMapping(path = "/encryptWithAnswers", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String encryptWithAnswers(@RequestBody EncryptWithAnswers encryptWithAnswers)  {
-		try {
-			return passwordManager.encrypt(encryptWithAnswers.getpText().getBytes(), encryptWithAnswers.getAnswers(),
-					encryptWithAnswers.getUser());
-		} catch (Exception e) {
-			throw new ResponseStatusException(
-			           HttpStatus.INTERNAL_SERVER_ERROR, "Error", e);
-		}
+		return passwordManagerComponent.encryptWithAnswers(encryptWithAnswers);
 	}
 	
 	@CrossOrigin
 	@ApiOperation(value = "Decrypt some cypher text with a list of answers")
 	@PostMapping(path = "/decryptWithAnswers", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String decryptWithAnswers(@RequestBody DecryptWithAnswers decryptWithAnswers)  {
-		try {
-			return passwordManager.decrypt(decryptWithAnswers.getcText(), decryptWithAnswers.getAnswers(),
-					decryptWithAnswers.getUser());
-		} catch (Exception e) {
-			throw new ResponseStatusException(
-			           HttpStatus.INTERNAL_SERVER_ERROR, "Error", e);
-		}
+		return passwordManagerComponent.decryptWithAnswers(decryptWithAnswers);
 	}
 }

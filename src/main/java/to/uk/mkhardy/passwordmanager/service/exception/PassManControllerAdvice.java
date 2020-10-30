@@ -9,21 +9,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.server.ResponseStatusException;
 
-@org.springframework.web.bind.annotation.ControllerAdvice
-public class ControllerAdvice {
+@ControllerAdvice
+public class PassManControllerAdvice {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(ControllerAdvice.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PassManControllerAdvice.class);
 	
 	@ExceptionHandler(RuntimeException.class)
 	public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException e,HttpServletRequest request) {
 		return error(HttpStatus.INTERNAL_SERVER_ERROR,e,request);
 	}
 	
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ErrorResponse> handleRuntimeException(Exception e,HttpServletRequest request) {
+	@ExceptionHandler(PassManException.class)
+	public ResponseEntity<ErrorResponse> handlePassManException(PassManException e,HttpServletRequest request) {
 		return error(HttpStatus.INTERNAL_SERVER_ERROR,e,request);
+	}
+	
+	@ExceptionHandler(ResponseStatusException.class)
+	public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException e,HttpServletRequest request) {
+		return error(e.getStatus(),e,request);
 	}
 	
 	private ResponseEntity<ErrorResponse> error(HttpStatus status, Exception e,HttpServletRequest request) {
