@@ -5,9 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,7 +71,7 @@ public class PasswordManagerController {
 	@CrossOrigin
 	@ApiOperation(value = "Checks an answer against a hash")
 	@PostMapping(path = "/isCorrectAnswer", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Map<String, Object> isCorrectAnswer(@RequestBody IsCorrectAnswer isCorrectAnswer) {
+	public Map<String, Object> isCorrectAnswer(@Valid @RequestBody IsCorrectAnswer isCorrectAnswer) {
 
 		boolean isValid = passwordManagerComponent.isCorrectAnswer(isCorrectAnswer);
 
@@ -85,7 +88,7 @@ public class PasswordManagerController {
 	@CrossOrigin
 	@ApiOperation(value = "Checks an password against a hash")
 	@PostMapping(path = "/isCorrectPassword", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Map<String, Object> isCorrectPassword(@RequestBody IsCorrectPassword isCorrectPassword) {
+	public Map<String, Object> isCorrectPassword(@Valid @RequestBody IsCorrectPassword isCorrectPassword) {
 
 		boolean isValid = passwordManagerComponent.isCorrectPassword(isCorrectPassword);
 
@@ -102,7 +105,7 @@ public class PasswordManagerController {
 	@CrossOrigin
 	@ApiOperation(value = "Hashes a password")
 	@PostMapping(path = "/getPassword", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Password getPassword(@RequestBody GetPassword getPassword) {
+	public Password getPassword(@Valid @RequestBody GetPassword getPassword) {
 		if(getPassword.getPassword().trim().length()==0) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "empty password");
 		}
@@ -123,14 +126,14 @@ public class PasswordManagerController {
 	@CrossOrigin
 	@ApiOperation(value = "Hashes an answer")
 	@PostMapping(path = "/getAnswer", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Answer getAnswer(@RequestBody GetAnswer getAnswer) {
+	public Answer getAnswer(@Valid @RequestBody GetAnswer getAnswer) {
 		return passwordManagerComponent.getAnswer(getAnswer);
 	}
 
 	@CrossOrigin
 	@ApiOperation(value = "Generate a data key")
 	@PostMapping(path = "/generateDataKey", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Map<String,Object> generateDataKey(@RequestBody GenerateDataKey generateDataKey)  {
+	public Map<String,Object> generateDataKey(@Valid @RequestBody GenerateDataKey generateDataKey)  {
 		String cKey = passwordManagerComponent.generateDataKey(generateDataKey);
 		Map<String,Object> response = new HashMap<String, Object>();
 		response.put("cKey",cKey);
@@ -141,7 +144,7 @@ public class PasswordManagerController {
 	@CrossOrigin
 	@ApiOperation(value = "Extract a data key")
 	@PostMapping(path = "/extractDataKey", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Map<String,Object> extractDataKey(@RequestBody ExtractDataKey extractDataKey)  {
+	public Map<String,Object> extractDataKey(@Valid @RequestBody ExtractDataKey extractDataKey)  {
 		String pKey = passwordManagerComponent.extractDataKey(extractDataKey);
 		Map<String,Object> response = new HashMap<String, Object>();
 		response.put("pKey",pKey);
@@ -152,7 +155,7 @@ public class PasswordManagerController {
 	@CrossOrigin
 	@ApiOperation(value = "Encrypt some plaintext with a list of answers")
 	@PostMapping(path = "/encryptWithAnswers", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Map<String,Object> encryptWithAnswers(@RequestBody EncryptWithAnswers encryptWithAnswers)  {
+	public Map<String,Object> encryptWithAnswers(@Valid @RequestBody EncryptWithAnswers encryptWithAnswers)  {
 		
 		String cText = passwordManagerComponent.encryptWithAnswers(encryptWithAnswers);
 		Map<String,Object> response = new HashMap<String, Object>();
@@ -163,7 +166,7 @@ public class PasswordManagerController {
 	@CrossOrigin
 	@ApiOperation(value = "Decrypt some cypher text with a list of answers")
 	@PostMapping(path = "/decryptWithAnswers", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Map<String,Object> decryptWithAnswers(@RequestBody DecryptWithAnswers decryptWithAnswers)  {
+	public Map<String,Object> decryptWithAnswers(@Valid @RequestBody DecryptWithAnswers decryptWithAnswers)  {
 		String pText = passwordManagerComponent.decryptWithAnswers(decryptWithAnswers);
 		Map<String,Object> response = new HashMap<String, Object>();
 		response.put("pText",pText);

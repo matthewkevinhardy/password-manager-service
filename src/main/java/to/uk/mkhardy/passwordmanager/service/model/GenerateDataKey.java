@@ -1,10 +1,16 @@
 package to.uk.mkhardy.passwordmanager.service.model;
 
-import to.uk.mkhardy.passwordmanager.core.beans.impl.User;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 public final class GenerateDataKey {
+	
+	@NotBlank(message = "password is mandatory")
 	private final String password;
+	
+	@Valid
 	private final User user;
+	
 	public GenerateDataKey(String password, User user) {
 		this.password = password;
 		this.user = user;

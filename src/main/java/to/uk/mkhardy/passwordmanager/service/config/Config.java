@@ -26,12 +26,14 @@ import to.uk.mkhardy.passwordmanager.service.utils.PasswordSpecialCharRule;
 public class Config {
 	
 	@Bean
+	@Scope("singleton")
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
 				.paths(PathSelectors.regex("/password-manager/.*")).build();
 	}
 	
 	@Bean
+	@Scope("singleton")
 	public PasswordManagerComponent getPasswordManagerComponent() {
 		return new PasswordManagerComponentImpl(getPasswordManager());
 	}

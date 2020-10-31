@@ -1,9 +1,14 @@
 package to.uk.mkhardy.passwordmanager.service.model;
 
-import to.uk.mkhardy.passwordmanager.core.beans.impl.User;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 public class GetPassword {
+	
+	@Valid
 	private User user;
+	
+	@NotBlank(message = "password is mandatory")
 	private String password;
 	
 	public User getUser() {
