@@ -1,5 +1,6 @@
 package to.uk.mkhardy.passwordmanager.service.model;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 public final class IsCorrectPassword {
@@ -7,7 +8,7 @@ public final class IsCorrectPassword {
 	@NotBlank(message = "pTextPassword is mandatory")
 	private final String pTextPassword;
 	
-	@NotBlank(message = "password is mandatory")
+	@Valid
 	private final Password password;
 	
 	public IsCorrectPassword(String pTextPassword, Password password) {

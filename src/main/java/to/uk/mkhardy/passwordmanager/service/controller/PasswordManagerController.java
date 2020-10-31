@@ -105,12 +105,6 @@ public class PasswordManagerController {
 	@ApiOperation(value = "Hashes a password")
 	@PostMapping(path = "/getPassword", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Password getPassword(@Valid @RequestBody GetPassword getPassword) {
-		if(getPassword.getPassword().trim().length()==0) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "empty password");
-		}
-		if(getPassword.getUser().getUserName().trim().length()==0) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "empty username");
-		}
 		Password pass = passwordManagerComponent.getPassword(getPassword);
 		return pass;
 	}
