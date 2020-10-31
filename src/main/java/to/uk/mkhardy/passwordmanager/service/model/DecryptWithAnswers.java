@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import to.uk.mkhardy.passwordmanager.service.utils.BlankListElementConstraint;
+
 public final class DecryptWithAnswers {
 	
 	@NotBlank(message = "cText is mandatory")
@@ -13,7 +15,7 @@ public final class DecryptWithAnswers {
 	@Valid
 	private final User user;
 	
-	@NotBlank(message = "Answers are mandatory")
+	@BlankListElementConstraint(message = "answers cannot be empty")
 	private final List<String> answers;
 	
 	public DecryptWithAnswers(String cText, User user, List<String> answers) {
