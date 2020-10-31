@@ -6,7 +6,6 @@ import to.uk.mkhardy.passwordmanager.core.PasswordManager;
 import to.uk.mkhardy.passwordmanager.core.beans.impl.Answer;
 import to.uk.mkhardy.passwordmanager.core.beans.impl.Password;
 import to.uk.mkhardy.passwordmanager.core.beans.impl.Question;
-import to.uk.mkhardy.passwordmanager.core.beans.impl.User;
 import to.uk.mkhardy.passwordmanager.core.impl.PasswordRuleException;
 import to.uk.mkhardy.passwordmanager.service.exception.PassManException;
 import to.uk.mkhardy.passwordmanager.service.exception.PassRuleException;
