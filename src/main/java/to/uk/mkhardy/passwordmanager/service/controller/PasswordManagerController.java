@@ -42,7 +42,7 @@ public class PasswordManagerController {
 	@CrossOrigin
 	@ApiOperation(value = "Check password against password rules")
 	@PostMapping(path = "/isValidPassword", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Map<String, Object> isValidPassword(@RequestParam(value = "password") String password) {
+	public Map<String, Object> isValidPassword(@RequestParam(value="password",required=true) String password) {
 
 		boolean isValid = false;
 		
