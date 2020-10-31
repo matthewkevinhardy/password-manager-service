@@ -13,7 +13,7 @@ public final class DecryptWithAnswers {
 	@Valid
 	private final User user;
 	
-	@NotBlank
+	@NotBlank(message = "Answers are mandatory")
 	private final List<String> answers;
 	
 	public DecryptWithAnswers(String cText, User user, List<String> answers) {

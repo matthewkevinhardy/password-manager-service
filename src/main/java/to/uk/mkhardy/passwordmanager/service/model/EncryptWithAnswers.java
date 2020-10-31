@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 public final class EncryptWithAnswers {
 	
@@ -14,7 +13,7 @@ public final class EncryptWithAnswers {
 	@Valid
 	private final User user;
 	
-	@NotEmpty(message = "Answers are mandatory")
+	@NotBlank(message = "Answers are mandatory")
 	private final List<String> answers;
 	
 	public EncryptWithAnswers(String pText, User user, List<String> answers) {
