@@ -5,7 +5,7 @@ RUN mkdir /password-manager-core
 RUN git clone https://github.com/matthewkevinhardy/password-manager-core.git /password-manager-core
 
 #Build
-RUN mvn -f /password-manager-core clean install
+RUN mvn -f /password-manager-core clean install -DskipTests
   
 COPY src /usr/src/app/src
 COPY pom.xml /usr/src/app
