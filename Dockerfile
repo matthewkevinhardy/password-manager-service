@@ -1,4 +1,12 @@
-FROM maven:3.5-jdk-8 AS build  
+FROM maven:3.5-jdk-8 AS build
+
+#Git
+RUN mkdir /password-manager-core
+RUN git clone https://github.com/matthewkevinhardy/password-manager-core.git /password-manager-core
+
+#Build
+RUN mvn -f /password-manager-core clean install
+  
 COPY src /usr/src/app/src
 COPY pom.xml /usr/src/app
 RUN mvn -f /usr/src/app/pom.xml clean package -DskipTests
